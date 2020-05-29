@@ -1,0 +1,18 @@
+#!/bin/sh
+# Testing instance tools.
+
+yum -y update
+yum -y install python3
+pip3 install boto3
+pip3 install mysql-connector-python
+
+# pip3 install csvkit
+
+cd /
+aws s3 cp s3://portfolio-918573727633-us-east-1-dataset/ec2-query.py /ec2-query.py
+
+wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+yum -y localinstall mysql57-community-release-el7-11.noarch.rpm
+yum -y install mysql-community-server
+
+touch /.init_complete
