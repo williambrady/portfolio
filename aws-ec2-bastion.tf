@@ -9,7 +9,17 @@ resource "aws_instance" "bastion" {
   tags = "${merge(map("Name","bastion"), var.tags)}"
   volume_tags = "${merge(map("Name","bastion"), var.tags)}"
   user_data = "${file("aws-ec2-bastion-userdata.txt")}"
-  depends_on = ["aws_s3_bucket.dataset","aws_iam_instance_profile.s3read","aws_security_group.bastion_public"]
+#  connection {
+#    type = "ssh"
+#    user = "ec2-user"
+#    private_key = "${file("~/.ssh/${var.ec2_keyname}.pem")}"
+#  }
+#  provisioner "remote-exec" {
+#    inline = [
+#      "aws s3 cp s3://portfolio-918573727633-us-east-1-dataset/aws-ec2-query.py aws-ec2-query.py",
+#    ]
+#  }
+  depends_on = ["aws_s3_bucket.dataset","aws_iam_instance_profile.s3read","aws_security_group.bastion_public","aws_vpc.main","aws_internet_gateway.main","aws_nat_gateway.main"]
 }
 
 # Create the Security Group for the instance
