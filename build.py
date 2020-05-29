@@ -11,8 +11,8 @@ with open(sourcefile) as fp:
     cnt = 0
     while line:
         if cnt == 0 :
-            log.write ("id,{}\n".format(line.strip()))
-            print ("id,{}".format(line.strip()))
+            log.write ("Id,{}\n".format(line.strip()))
+            print ("Id,{}".format(line.strip()))
         else:
             log.write ("{},{}\n".format(cnt, line.strip()))
             print ("{},{}".format(cnt, line.strip()))
@@ -21,3 +21,7 @@ with open(sourcefile) as fp:
 
 log.close()
 print("\nOutput file {} created.".format(destfile))
+
+# Let's verify a valid SSH key is in place.
+# grep terraform vars for ec2_keyname then verify it exists in ~/.ssh
+# if not, ssh-keygen  -b 4096 and bake it in
