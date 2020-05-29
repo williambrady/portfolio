@@ -14,6 +14,8 @@ resource "aws_s3_bucket" "logging" {
     enabled = true
   }
 
+  force_destroy = true
+
   tags = "${merge(map("Name","logging"), var.tags)}"
 }
 
@@ -88,7 +90,7 @@ resource "aws_s3_bucket_policy" "logging" {
 POLICY
 }
 
-# Block Publiic Access to the bucket as it should never be needed.
+# Block Public Access to the bucket as it should never be needed.
 resource "aws_s3_bucket_public_access_block" "logging" {
   bucket = "${aws_s3_bucket.logging.id}"
   block_public_acls   = true
