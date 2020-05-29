@@ -27,6 +27,7 @@ Assets:
 
 - (aws_s3_bucket.dataset) S3 bucket to house the data set.
 - (aws_s3_bucket_policy.dataset) S3 bucket policy enforcing security controls such as disabling public access and enabling access logging.
+- (aws_vpc.main) VPC to contain all network assets.
 - (aws_lambda_function.dataset) Lambda function written in Python to accept HTTP request from API Gateway, query S3 Select, format the response, and return content.
 - (aws_apigateway.dataset) API Gateway HTTP service to accept GET requests for arbitrary carId value and return details.
 
