@@ -1,0 +1,26 @@
+resource "aws_s3_bucket" "dataset" {
+  bucket =  "${var.bucket_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+
+  acl           = "private"
+  region        = "${var.aws_region}"
+
+  logging{
+    target_bucket = "${aws_s3_bucket.logging.id}"
+    target_prefix = "s3-logs/${var.bucket_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+  }
+
+  versioning {
+    enabled = true
+  }
+
+  tags = "${merge(map("Name","dataset"), var.tags)}"
+}
+
+# Block Publiic Access to the bucket as it should never be needed.
+resource "aws_s3_bucket_public_access_block" "dataset" {
+  bucket = "${aws_s3_bucket.dataset.id}"
+  block_public_acls   = true
+  block_public_policy = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
+}
