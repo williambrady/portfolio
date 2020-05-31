@@ -41,3 +41,11 @@ resource "aws_s3_bucket_object" "ec2_query" {
   source = "./aws-ec2-query.py"
   tags = "${merge(map("Name","aws-ec2-query.py"), var.tags)}"
 }
+# Upload the lambda function.
+resource "aws_s3_bucket_object" "lambda_function" {
+  depends_on = ["aws_s3_bucket.dataset"]
+  bucket = "${aws_s3_bucket.dataset.id}"
+  key    = "lambda_function.zip"
+  source = "./aws-lambda-portfolio-payload.zip"
+  tags = "${merge(map("Name","aws-lambda-portfolio-payload.zip"), var.tags)}"
+}
