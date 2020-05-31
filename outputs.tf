@@ -15,6 +15,9 @@ output "aws_cloudtrail_portfolio" {
 output "aws_iam_instance_profile" {
   value = "${aws_iam_instance_profile.s3read.arn}"
 }
+output "aws_iam_lambda_role" {
+  value = "${aws_iam_role.lambda_s3_read.arn}"
+}
 
 # Bastion host information
 output "aws_bastion_public_ip" {
@@ -41,4 +44,8 @@ output "aws_vpc_private_subnet_a"{
 }
 output "aws_vpc_private_subnet_b"{
   value = "${aws_subnet.private-subnet-b.cidr_block}, ${aws_subnet.private-subnet-b.availability_zone}"
+}
+# API gateway
+output "api_gateway" {
+  value = "${aws_api_gateway_deployment.portfolio.invoke_url}"
 }
