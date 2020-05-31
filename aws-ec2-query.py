@@ -1,14 +1,14 @@
 import boto3
 import sys
 
-if len(sys.argv) < 2:
+if len(event) < 1:
   print("Invalid input.")
   quit()
 else:
-  id = sys.argv[1]
+  carId = event
 
 # Simulate the API Gateway request from the CLI to ensure access is in place.
-S3_QUERY = "select * from s3object s where s.\"Id\"=\'{}\'".format(id)
+S3_QUERY = "select * from s3object s where s.\"carId\"=\'{}\'".format(id)
 S3_BUCKET = 'portfolio-918573727633-us-east-1-dataset'
 s3 = boto3.client('s3')
 
