@@ -60,7 +60,7 @@ Assets:
 - API Gateway Policy: Allow API Gateway to call Lambda
 - API Gateway: Publish Endpoint that connects HTTPS to Lambda
 
-### Recommended AWS Solution (What is actually built)###
+### Recommended AWS Solution (What is actually built) ###
 The *recommended* option would be the same as the cheapest option, with additional logging and controls.
 
 *Pros:* Low complexity, low cost, reasonable visibility for operations and security teams
