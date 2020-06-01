@@ -29,6 +29,8 @@ The cheapest and quickest option would be to drop the data into an S3 bucket in 
 
 Actions:
 
+Before executing a build, update the terraform.tfvars and variables.tf files to reflect your AWS account and desired project name.
+
 ```
 terraform apply
 

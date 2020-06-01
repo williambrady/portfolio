@@ -11,7 +11,7 @@ variable "tags" {
     "owner"   = "william.brady"
     "lob"     = "cloudops"
     "contact" = "will@crofton.cloud"
-    "projectid" = "portfolio-0002"
+    "projectid" = "portfolio-0001"
     "component" = "infrastructure"
     "disposition" = "development"
   }
