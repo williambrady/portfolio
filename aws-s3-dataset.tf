@@ -37,20 +37,12 @@ resource "aws_s3_bucket_object" "dataset" {
   source = "./indexed_dataset.csv"
   tags = "${merge(map("Name","indexed_dataset.csv"), var.tags)}"
 }
-# Upload the data handler for the ec2-query.py for testing.
-resource "aws_s3_bucket_object" "ec2_query" {
-  depends_on = ["aws_s3_bucket.dataset"]
-  bucket = "${aws_s3_bucket.dataset.id}"
-  key    = "aws-ec2-query.py"
-  source = "./aws-ec2-query.py"
-  tags = "${merge(map("Name","aws-ec2-query.py"), var.tags)}"
-}
 # Upload the lambda function.
 resource "aws_s3_bucket_object" "lambda_function" {
   depends_on = ["aws_s3_bucket.dataset"]
   bucket = "${aws_s3_bucket.dataset.id}"
   key    = "lambda_function.zip"
-  source = "./aws-lambda-portfolio-payload.zip"
+  source = "./lambda_function.zip"
   tags = "${merge(map("Name","aws-lambda-portfolio-payload.zip"), var.tags)}"
 }
 # Upload original dataset.csv to the bucket for accessibility.
