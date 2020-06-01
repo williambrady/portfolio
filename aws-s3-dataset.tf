@@ -4,14 +4,18 @@ resource "aws_s3_bucket" "dataset" {
 
   acl           = "private"
   region        = "${var.aws_region}"
-
-  logging{
-    target_bucket = "${aws_s3_bucket.logging.id}"
-    target_prefix = "s3-logs/${var.bucket_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
-  }
+  force_destroy = true
+#  logging{
+#    target_bucket = "${aws_s3_bucket.logging.id}"
+#    target_prefix = "s3-logs/${var.bucket_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+#  }
 
   versioning {
     enabled = true
+  }
+
+  provisioner "local-exec" {
+    command = "python3 build.py"
   }
 
   tags = "${merge(map("Name","dataset"), var.tags)}"
