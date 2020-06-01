@@ -2,12 +2,14 @@ import boto3
 import json
 
 def lambda_handler(event, context):
-  # Parse the incoming string
+  # Capture the incoming string
   carId = event['queryStringParameters']['carId']
+  # Build the SQL Query
   S3_QUERY = "select * from s3object s where s.\"carId\"=\'" + carId + "'"
+  # Hardcoded the bucket based on desired naming convention. Will revisit to make this dynamic.
   S3_BUCKET = 'portfolio-918573727633-us-east-1-dataset'
   s3 = boto3.client('s3')
-
+  # Make the call to S3 Select as CSV and ask for JSON returned content.
   r = s3.select_object_content(
     Bucket=S3_BUCKET,
     Key='indexed_dataset.csv',
@@ -17,9 +19,8 @@ def lambda_handler(event, context):
     OutputSerialization={'JSON': {}},
   )
 
-  # Construct the response body
+  # Construct the Response Body
   queryResponse = {}
-
   for event in r['Payload']:
     if 'Stats' in event:
       statsDetails = event['Stats']['Details']
@@ -33,7 +34,7 @@ def lambda_handler(event, context):
     else:
       pass
 
-  # Construct the HTTP response
+  # Construct the HTTP Response
   responseObject = {}
   responseObject['statusCode'] = 200
   responseObject['headers'] = {}
