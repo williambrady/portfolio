@@ -82,8 +82,14 @@ resource "aws_lambda_function" "portfolio"{
   handler = "lambda_function.lambda_handler"
   runtime = "python3.8"
   source_code_hash = "${base64sha256("aws-lambda-portfolio-payload.zip")}"
-  tags = "${merge(map("Name","portfolio-lambda"), var.tags)}"
-  depends_on = ["aws_iam_instance_profile.lambda_s3_read","aws_s3_bucket_object.lambda_function"]
+  tags = "${var.tags}"
+  depends_on = [
+    "aws_iam_instance_profile.lambda_s3_read",
+    "aws_s3_bucket_object.lambda_function",
+    "aws_s3_bucket_object.dataset",
+    "aws_s3_bucket_object.lambda_function",
+    "aws_s3_bucket_object.og_dataset"
+  ]
 }
 
 resource "aws_lambda_permission" "apigw" {

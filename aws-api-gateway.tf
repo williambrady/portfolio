@@ -4,8 +4,10 @@ resource "aws_api_gateway_rest_api" "portfolio" {
   endpoint_configuration {
     types     = ["REGIONAL"]
   }
-  tags        = "${merge(map("Name","portfolio-lambda"), var.tags)}"
-  depends_on  = ["aws_lambda_function.portfolio"]
+  tags        = "${var.tags}"
+  depends_on  = [
+    "aws_lambda_function.portfolio"
+  ]
 }
 
 resource "aws_api_gateway_resource" "proxy" {
