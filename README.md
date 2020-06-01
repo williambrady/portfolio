@@ -28,11 +28,11 @@ There are many ways these goals can be achieved, so a few options will be offere
 The cheapest and quickest option would be to drop the data into an S3 bucket in CSV format and leverage S3 Select to query the content. The gap from API request to S3 can be filled with API Gateway connected to a Lambda function. Since the solution must be deployed as code, the initial version will be built through Terraform to allow transition to other services and cloud platforms as requirements change. Since AWS S3 Select uses Presto on the backend, the data will have to have row identifiers added before query time. This will be handled via python pre-parser executed during S3 bucket setup. Additionally, there is an API test script that is initiated by the last TF creation,
 
 Actions:
+
 '''
 terraform apply
 
 python3 test-api.py
-
 '''
 
 Terraform initiates local-exec to:
@@ -56,11 +56,11 @@ Assets:
 The *recommended* option would be the same as the cheapest option, with additional logging and controls.
 
 Actions:
+
 '''
 terraform apply
 
 python3 test-api.py
-
 '''
 
 Terraform initiates local-exec to:
