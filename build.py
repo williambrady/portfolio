@@ -32,7 +32,7 @@ Lambda Packager: zip the python file into a zip with no path included.
 This is required for successful Lambda inclusion.
 """
 
-ZIP = subprocess.check_output("zip -j aws-lambda-portfolio-payload.zip lambda_function.py",shell=True).strip()
+ZIP = subprocess.check_output("zip -j lambda_function.zip lambda_function.py",shell=True).strip()
 ZIP = ZIP.decode().strip()
 print("Zipping lambda function: {}".format(ZIP))
 print("") # Adding a trailing \n for asthetics
