@@ -5,10 +5,10 @@ resource "aws_s3_bucket" "dataset" {
   acl           = "private"
   region        = "${var.aws_region}"
   force_destroy = true
-#  logging{
-#    target_bucket = "${aws_s3_bucket.logging.id}"
-#    target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
-#  }
+  logging{
+    target_bucket = "${aws_s3_bucket.logging.id}"
+    target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+  }
 
   versioning {
     enabled = true
