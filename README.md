@@ -1,7 +1,7 @@
 # portfolio
 Sample project
 
-Given the following criteria, options should be outlined and constructed.
+Given the following criteria, options will be outlined and constructed.
 
 ## Requirements ##
 
@@ -25,7 +25,13 @@ Golf, Silver, Volkswagon, 2005
 There are many ways these goals can be achieved, so a few options will be offered. There are no stated requirements for additional security, logging, or expectations around cost so options will start off basic and migrate into recommended.
 
 ### Cheapest AWS Solution ###
-The cheapest and quickest option would be to drop the data into an S3 bucket in CSV format and leverage S3 Select to query the content. The gap from API request to S3 can be filled with API Gateway connected to a Lambda function. Since the solution must be deployed as code, the initial version will be built through Terraform to allow transition to other services and cloud platforms as requirements change. Since AWS S3 Select uses Presto on the backend, the data will have to have row identifiers added before query time. This will be handled via python pre-parser executed during S3 bucket setup. Additionally, there is an API test script that is initiated by the last TF creation,
+The cheapest and quickest option would be to drop the data into an S3 bucket in CSV format and leverage S3 Select to query the content. The gap from API request to S3 can be filled with API Gateway connected to a Lambda function. Since the solution must be deployed as code, the initial version will be built through Terraform to allow transition to other services and cloud platforms as requirements change. Since AWS S3 Select uses Presto on the backend, the data will have to have row identifiers added before query time. This will be handled via python pre-parser executed during S3 bucket setup.
+
+If this code was loaded into a deployment pipeline, the content could be formatted outside terraform. Additionally, the post-deployment testing could be executed automatically.
+
+*Pros:* Low complexity, low cost
+
+*Cons:* Low resilience, built for slow response time, low visibility
 
 Actions:
 
@@ -54,8 +60,12 @@ Assets:
 - API Gateway Policy: Allow API Gateway to call Lambda
 - API Gateway: Publish Endpoint that connects HTTPS to Lambda
 
-### Recommended AWS Solution ###
+### Recommended AWS Solution (What is actually built)###
 The *recommended* option would be the same as the cheapest option, with additional logging and controls.
+
+*Pros:* Low complexity, low cost, reasonable visibility for operations and security teams
+
+*Cons:* Low resilience, built for slow response time
 
 Actions:
 
@@ -74,13 +84,11 @@ Assets:
 
 - Data Set: (dataset.csv) Initial CSV file with car data
 - Python Loader: (build.py) Add row numbers to the CSV to emulate an index.
-- IAM Role
-- CloudTrail
-- CloudWatch
-- S3 Bucket, Logging:
-- S3 Bucket, Logging:
+- CloudTrail: Configured to record all S3 access and Lambda execution details.
+- S3 Bucket, Logging: To house security and operational logging.
+- S3 Bucket Policy, Logging: To allow log delivery access to bucket  while explicitly denying public access.
 - S3 Bucket, Dataset: To house data for the project
-- S3 Bucket Policy, dataset: To allow access to bucket and contents
+- S3 Bucket Policy, dataset: To allow access to bucket and contents while explicitly denying public access.
 - S3 Bucket, Dataset: file placement
 - Lambda Function Script: broker requests from API Gateway to S3
 - Lambda Function Policy: Allow API Gateway to call Lambda and Lambda to access S3
@@ -90,17 +98,6 @@ Assets:
 
 ### Scalable AWS Solution ###
 
-If there is an potential for data growth or requirements for faster access, the deployment can be scaled out to include AWS RDS.
+If there is an potential for data growth or requirements for faster access, the deployment can be scaled out to include AWS RDS. In this scenario, a method to load the initial data into RDS would be required. This could be handled via Lambda or EC2. Optionally, one could attempt to  write the initial data set into a MySQL backup format (Percona Xtrabackup) that can be consumed at deployment time for the load process. The challenge with this scenario would be to create the loader platform and expire it, so a single-execution Lambda would be preferable to an EC2 instance from a cost perspective.
 
-
-
-### Cheapest Azure Solution ###
-
-- Microsoft Azure Blob Storage to house the file, converted from CSV to JSON before deposit
-- Microsoft API Gateway to front-end the requests and enforce authentication
-- ETL of files as needed
-
-### Scalable Azure Solution ###
-
-- SQL Server
-- Microsoft API Gateway to front-end the requests and enforce authentication
+Once the RDS isntance is online and the data is loaded, change the Lambda to query RDS instead of S3 Select. The rest of the stack is relatively unchanged.
