@@ -2,7 +2,7 @@
 
 # Create an Instance Role to allow the Lambda instance to AssumeRole.
 resource "aws_iam_role" "lambda_s3_read" {
-  name = "${var.bucket_prefix}-lambda_s3_read-role"
+  name = "${var.project_prefix}-lambda_s3_read-role"
   path = "/service-role/"
   assume_role_policy = <<EOF
 {
@@ -23,7 +23,7 @@ EOF
 
 # Create a Read-Only S3 policy to allow the lambda instance to read the S3 Bucket
 resource "aws_iam_policy" "lambda_s3_read" {
-  name        = "${var.bucket_prefix}-lambda_s3_read-policy"
+  name        = "${var.project_prefix}-lambda_s3_read-policy"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -65,7 +65,7 @@ resource "aws_iam_role_policy_attachment" "lambda_s3_read" {
 
 #Attach the Policy to the Instance Role
 resource "aws_iam_instance_profile" "lambda_s3_read" {
-  name = "${var.bucket_prefix}-lambda_s3_read-profile"
+  name = "${var.project_prefix}-lambda_s3_read-profile"
   role = "${aws_iam_role.lambda_s3_read.name}"
   depends_on = ["aws_iam_role.lambda_s3_read","aws_iam_policy.lambda_s3_read"]
 }

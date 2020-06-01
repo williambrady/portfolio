@@ -1,13 +1,13 @@
 resource "aws_s3_bucket" "dataset" {
   depends_on = ["aws_s3_bucket.dataset"]
-  bucket =  "${var.bucket_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+  bucket =  "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
 
   acl           = "private"
   region        = "${var.aws_region}"
   force_destroy = true
 #  logging{
 #    target_bucket = "${aws_s3_bucket.logging.id}"
-#    target_prefix = "s3-logs/${var.bucket_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+#    target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
 #  }
 
   versioning {
