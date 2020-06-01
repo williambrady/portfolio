@@ -29,11 +29,11 @@ The cheapest and quickest option would be to drop the data into an S3 bucket in 
 
 Actions:
 
-'''
+```
 terraform apply
 
 python3 test-api.py
-'''
+```
 
 Terraform initiates local-exec to:
  - Add a carID column to the dataset to emulate an index.
@@ -57,11 +57,11 @@ The *recommended* option would be the same as the cheapest option, with addition
 
 Actions:
 
-'''
+```
 terraform apply
 
 python3 test-api.py
-'''
+```
 
 Terraform initiates local-exec to:
  - Add a carID column to the dataset to emulate an index.
