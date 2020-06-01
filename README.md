@@ -101,3 +101,15 @@ Assets:
 If there is an potential for data growth or requirements for faster access, the deployment can be scaled out to include AWS RDS. In this scenario, a method to load the initial data into RDS would be required. This could be handled via Lambda or EC2. Optionally, one could attempt to  write the initial data set into a MySQL backup format (Percona Xtrabackup) that can be consumed at deployment time for the load process. The challenge with this scenario would be to create the loader platform and expire it, so a single-execution Lambda would be preferable to an EC2 instance from a cost perspective.
 
 Once the RDS isntance is online and the data is loaded, change the Lambda to query RDS instead of S3 Select. The rest of the stack is relatively unchanged.
+
+
+### What I would do differently ###
+
+If I were to continue evolving this project, I have a few things I would improve.
+
+- Convert my code into modules. I wrote this project from scratch as I have always created for work, but I did not want to reuse code that was not 100% mine. My initial version is long-hand, but I would like to rewrite into modules for re-use.
+- Create the TF code for RDS deployment. I would like to practice RDS deployment methods, so it would be handy to create the reference code in my personal repo for quick reference
+- Create the Microsoft Azure equivalent of this stack in Terraform. Azure API Management, Azure Functions, and Azure Storage should be able to accomplish the same task.
+- Consider and deploy authentication options. I have worked heavily with SSO / SAML integration, but have limited experience with implementing API authentication options.
+
+I would also like to see other submissions to solve this problem. Seeing how other people approached the problem could be helpful and adopting any coding nuances that I like from their solutions could be beneficial. The more I see, the better I can be.
