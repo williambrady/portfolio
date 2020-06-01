@@ -27,3 +27,6 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+
+# Ensure a new lambda function is packaged each time by not committing it.
+lambda_function.zip
