@@ -1,5 +1,13 @@
+output "aws_s3_bucket_logging" {
+  value = "${aws_s3_bucket.logging.id}"
+}
+
 output "aws_s3_bucket_dataset" {
   value = "${aws_s3_bucket.dataset.id}"
+}
+
+output "aws_cloudtrail_portfolio" {
+  value = "${aws_cloudtrail.portfolio.id}"
 }
 
 output "aws_iam_lambda_role" {
