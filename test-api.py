@@ -16,6 +16,6 @@ i = 0
 while i < 10:
   response = requests.get(URL, params={"carId":i})
   print("Requesting carID {}",i)
-  print(response.json())
+  print("\t{}".format(response.json()))
   print("")
   i += 1
