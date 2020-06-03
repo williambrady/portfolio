@@ -39,7 +39,7 @@ Before executing a build, update the terraform.tfvars and variables.tf files to 
 
 ```
 terraform apply -var 'infile=dataset.csv'
- <or>
+    <or>
 terraform apply -auto-approve -var 'infile=dataset.csv'
 
 python3 test-api.py
