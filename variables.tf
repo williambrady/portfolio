@@ -13,3 +13,4 @@ variable "tags" {
     "disposition" = "development"
   }
 }
+variable "infile" { description = "original CSV file to build from"}

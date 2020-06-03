@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "dataset" {
   }
 
   provisioner "local-exec" {
-    command = "python3 build.py"
+    command = "python3 build.py ${var.infile}"
   }
 
   tags = "${var.tags}"
@@ -49,7 +49,7 @@ resource "aws_s3_bucket_object" "lambda_function" {
 resource "aws_s3_bucket_object" "og_dataset" {
   depends_on = ["aws_s3_bucket.dataset"]
   bucket = "${aws_s3_bucket.dataset.id}"
-  key    = "dataset.csv"
-  source = "./dataset.csv"
+  key    = "${var.infile}"
+  source = "./${var.infile}"
   tags = "${var.tags}"
 }
