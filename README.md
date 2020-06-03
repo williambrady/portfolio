@@ -72,7 +72,9 @@ The *recommended* option would be the same as the cheapest option, with addition
 Actions:
 
 ```
-terraform apply
+terraform apply -var 'infile=dataset.csv'
+    <or>
+terraform apply -auto-approve -var 'infile=dataset.csv'
 
 python3 test-api.py
 ```
@@ -100,9 +102,14 @@ Assets:
 
 ### Scalable AWS Solution ###
 
-If there is an potential for data growth or requirements for faster access, the deployment can be scaled out to include AWS RDS. In this scenario, a method to load the initial data into RDS would be required. This could be handled via Lambda or EC2. Optionally, one could attempt to  write the initial data set into a MySQL backup format (Percona Xtrabackup) that can be consumed at deployment time for the load process. The challenge with this scenario would be to create the loader platform and expire it, so a single-execution Lambda would be preferable to an EC2 instance from a cost perspective.
+If there is an potential for data growth or requirements for faster access, the deployment can be scaled out to include AWS RDS. In this scenario, a method to load the initial data into RDS would be required. This could be handled via Lambda or EC2. Optionally, one could attempt to  write the initial data set into a MySQL backup format (Percona Xtrabackup) that can be consumed at deployment time for the load process, but a single execution Lambda would likely be a better use of time.
 
-Once the RDS isntance is online and the data is loaded, change the Lambda to query RDS instead of S3 Select. The rest of the stack is relatively unchanged.
+There are two challenges with this scenario:
+ - Loading Data: a single-execution Lambda would be preferable to an EC2 instance from a cost and cleanliness perspective.
+ - Secrets handling: The database requires a credential set to grant access. This credential needs to be accessible to the Lambda function making the call. This can be wrapped in AWS Secrets Manager or in SSM Parameter Store, with preference for Secrets Manager. SSM PS is cheaper, but has a lower SLA and may not scale as well.
+ - Introduction of a network layer: The original solution communicated via AWS ARNs. RDS will open a TCP listener that will reside on a network somewhere. To protect this, a VPC should exist with the RDS instance bound to the private subnets. Additionally, the Lambda function will need refitting to bind to the same VPC (private subnets as well) to allow communication.
+
+Other than these pieces, the original stack can be used with minimal updates.
 
 
 ### What I would do differently ###
