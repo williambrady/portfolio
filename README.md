@@ -35,10 +35,12 @@ If this code was loaded into a deployment pipeline, the content could be formatt
 
 Actions:
 
-Before executing a build, update the terraform.tfvars and variables.tf files to reflect your AWS account and desired project name.
+Before executing a build, update the terraform.tfvars and variables.tf files to reflect your AWS account and desired project name. Additionally, since there was a requirement to not hardcode inputs, the source file has been removed from the terraform.tfvars file and should be input as a variable at run-time. This is method is more inline with pipeline builds.
 
 ```
-terraform apply
+terraform apply -var 'infile=dataset.csv'
+ <or>
+terraform apply -auto-approve -var 'infile=dataset.csv'
 
 python3 test-api.py
 ```
