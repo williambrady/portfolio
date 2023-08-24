@@ -1,6 +1,6 @@
 name: azure-access-check
 run-name: ${{ github.actor }} is testing azure access with secrets
-on: [push]
+on: [workflow_dispatch]
 
 env:
   az_certificate_pem: ${{ secrets.az_certificate_pem }}
