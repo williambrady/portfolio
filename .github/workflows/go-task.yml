@@ -6,7 +6,11 @@ jobs:
   task-test:
     runs-on: ubuntu-latest
     steps:
-      - name: in path
-        run: which task
-      - name: Check Version
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.15'
+
+      - name: huh
         run: task --version
