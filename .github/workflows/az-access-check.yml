@@ -4,8 +4,8 @@ on: [push]
 
 env:
   az_certificate_pem: ${{ secrets.az_certificate_pem }}
-  az_client_id: ${{ vars.az_client_id }}
-  az_tenant_id: ${{ vars.az_tenant_id }}
+  az_client_id: ${{ secrets.az_client_id }}
+  az_tenant_id: ${{ secrets.az_tenant_id }}
 
 jobs:
   azure-connection-test:
@@ -18,4 +18,4 @@ jobs:
       - name: Create the PEM
         run: echo "${{ secrets.az_certificate_pem }}" > env.pem
       - name: Valdiate CLI Access
-        run: az login --service-principal -u ${{ vars.az_client_id }} -p env.pem --tenant ${{ vars.az_tenant_id }} --allow-no-subscription
+        run: az login --service-principal -u ${{ secrets.az_client_id }} -p env.pem --tenant ${{ secrets.az_tenant_id }} --allow-no-subscription
