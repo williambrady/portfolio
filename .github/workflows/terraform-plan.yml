@@ -1,15 +1,15 @@
 name: terraform-plan
-run-name: ${{ github.actor }} is terraform planning
+run-name: ${{ github.actor }} is planning terraform
 on: [push]
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: "us-east-1"
 
 jobs:
   aws-connection-test:
     runs-on: ubuntu-latest
-    name: AWS Connection Test
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      # AWS_DEFAULT_REGION: ${{ var.AWS_REGION }}
     steps:
       - run: which aws
       - run: aws --version
@@ -17,11 +17,7 @@ jobs:
       - run: aws sts get-caller-identity
   terraform-validate:
     runs-on: ubuntu-latest
-    name: Terraform Validate
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      # AWS_DEFAULT_REGION: ${{ var.AWS_REGION }}
       TF_VAR_infile: 'dataset.csv'
     steps:
       - uses: actions/checkout@v3
