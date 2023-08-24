@@ -9,7 +9,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: ${{ var.AWS_REGION }}
+      # AWS_DEFAULT_REGION: ${{ var.AWS_REGION }}
     steps:
       - run: which aws
       - run: aws --version
@@ -21,7 +21,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: ${{ var.AWS_REGION }}
+      # AWS_DEFAULT_REGION: ${{ var.AWS_REGION }}
       TF_VAR_infile: 'dataset.csv'
     steps:
       - uses: actions/checkout@v3
