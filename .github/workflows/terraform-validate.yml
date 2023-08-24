@@ -1,6 +1,12 @@
 name: terraform-validate
 run-name: ${{ github.actor }} is testing GitHub Actions
 on: [push]
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+
 jobs:
   terraform-validate:
     runs-on: ubuntu-latest
@@ -10,3 +16,4 @@ jobs:
       - run: terraform init
       - run: terraform fmt
       - run: terraform validate
+      - run: aws sts get-caller-identity
