@@ -15,19 +15,11 @@ jobs:
       - run: which aws
       - run: aws --version
       - run: echo $AWS_ACCESS_KEY_ID
-        with:
-          AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         env:
           AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       - run: aws sts get-caller-identity
-        with:
-          AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         env:
           AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -41,11 +33,6 @@ jobs:
       - run: terraform init
       - run: terraform fmt
       - run: terraform plan
-        with:
-          AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          TF_VAR_infile: 'dataset.csv'
         env:
           AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
