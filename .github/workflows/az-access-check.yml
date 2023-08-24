@@ -16,6 +16,6 @@ jobs:
       - name: Check CLI Version
         run: az --version
       - name: Create the PEM
-        run: echo ${{ secrets.az_certificate_pem }} > env.pem
+        run: echo "${{ secrets.az_certificate_pem }}" > env.pem
       - name: Valdiate CLI Access
         run: az login --service-principal -u ${{ vars.az_client_id }} -p env.pem --tenant ${{ vars.az_tenant_id }} --allow-no-subscription
