@@ -2,23 +2,34 @@
 resource "aws_s3_bucket" "logging" {
   bucket = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
 
-  acl    = "log-delivery-write"
+  # acl    = "log-delivery-write"
   region = var.aws_region
 
-  logging {
-    target_bucket = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
-    target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
-  }
-
-  versioning {
-    enabled = true
-  }
+  # logging {
+  #   target_bucket = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
+  #   target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
+  # }
 
   # Typically force_destroy is not set, but since this project is a test and will be created/destroyed repeatedly it is allowable.
   force_destroy = true
 
   tags = var.tags
 }
+
+# Set bucket versioning
+resource "aws_s3_bucket_versioning" "logging" {
+  bucket = aws_s3_bucket.logging.id
+
+  enabled = true
+}
+
+# Set bucket as logging destination
+resource "aws_s3_bucket_acl" "logging" {
+  bucket = aws_s3_bucket.logging.id
+
+  acl = "log-delivery-write"
+}
+
 
 # Set the bucket policy to allow AWS log writing.
 resource "aws_s3_bucket_policy" "logging" {
