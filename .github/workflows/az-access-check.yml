@@ -1,0 +1,21 @@
+name: azure-access-check
+run-name: ${{ github.actor }} is testing azure access with secrets
+on: [push]
+
+env:
+  az_certificate_pem: ${{ secrets.az_certificate_pem }}
+  az_client_id: ${{ vars.az_client_id }}
+  az_tenant_id: ${{ vars.az_tenant_id }}
+
+jobs:
+  azure-connection-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check CLI Version
+        run: az --version
+      - name: Create the PEM
+        run: echo ${{ secrets.az_certificate_pem }} > env.pem
+      - name: Valdiate CLI Access
+        run: az login --service-principal -u ${{ az_client_id }} -p env.pem --tenant $az_tenant_id --allow-no-subscription
