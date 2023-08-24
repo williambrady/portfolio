@@ -3,7 +3,7 @@ resource "aws_s3_bucket" "logging" {
   bucket = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
 
   # acl    = "log-delivery-write"
-  region = var.aws_region
+  # region = var.aws_region
 
   # logging {
   #   target_bucket = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
@@ -19,8 +19,9 @@ resource "aws_s3_bucket" "logging" {
 # Set bucket versioning
 resource "aws_s3_bucket_versioning" "logging" {
   bucket = aws_s3_bucket.logging.id
-
-  enabled = true
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 # Set bucket as logging destination
@@ -29,7 +30,6 @@ resource "aws_s3_bucket_acl" "logging" {
 
   acl = "log-delivery-write"
 }
-
 
 # Set the bucket policy to allow AWS log writing.
 resource "aws_s3_bucket_policy" "logging" {

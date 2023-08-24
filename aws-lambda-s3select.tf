@@ -90,10 +90,10 @@ resource "aws_lambda_function" "portfolio" {
   tags             = var.tags
   depends_on = [
     aws_iam_instance_profile.lambda_s3_read,
-    aws_s3_bucket_object.lambda_function,
-    aws_s3_bucket_object.dataset,
-    aws_s3_bucket_object.lambda_function,
-    aws_s3_bucket_object.og_dataset,
+    aws_s3_object.lambda_function,
+    aws_s3_object.dataset,
+    aws_s3_object.lambda_function,
+    aws_s3_object.og_dataset,
   ]
 }
 
