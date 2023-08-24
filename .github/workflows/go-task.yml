@@ -1,0 +1,12 @@
+name: check for go task
+run-name: ${{ github.actor }} is testing for go task in the runner
+on: [push]
+
+jobs:
+  task-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: in path
+        run: which task
+      - name: Check Version
+        run: task --version
