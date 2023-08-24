@@ -3,8 +3,8 @@ run-name: ${{ github.actor }} is testing aws access with secrets
 on: [push]
 
 env:
-  AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
 
 jobs:
@@ -17,8 +17,8 @@ jobs:
         run: aws --version
       - name: Check environment variables to see if we have access to aws
         env:
-          AWS_ACCESS_KEY_ID:: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY:: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
           TEST: "manual test"
         run: echo $AWS_ACCESS_KEY_ID
