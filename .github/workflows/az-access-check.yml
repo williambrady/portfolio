@@ -6,6 +6,7 @@ env:
   az_certificate_pem: ${{ secrets.az_certificate_pem }}
   az_client_id: ${{ secrets.az_client_id }}
   az_tenant_id: ${{ secrets.az_tenant_id }}
+  testing: ${{ vars.testing }}
 
 jobs:
   azure-connection-test:
@@ -15,7 +16,9 @@ jobs:
     steps:
       - name: Check CLI Version
         run: az --version
-      - name: Create the PEM
-        run: echo "${{ secrets.az_certificate_pem }}" > env.pem
-      - name: Valdiate CLI Access
-        run: az login --service-principal -u ${{ secrets.az_client_id }} -p env.pem --tenant ${{ secrets.az_tenant_id }} --allow-no-subscription
+      - name: testing quotes
+        run: echo terraform ${{ env.testing }}
+      # - name: Create the PEM
+      #   run: echo "${{ secrets.az_certificate_pem }}" > env.pem
+      # - name: Valdiate CLI Access
+      #   run: az login --service-principal -u ${{ secrets.az_client_id }} -p env.pem --tenant ${{ secrets.az_tenant_id }} --allow-no-subscription
