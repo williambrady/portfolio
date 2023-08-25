@@ -1,6 +1,7 @@
 name: azure-access-check
 run-name: ${{ github.actor }} is testing azure access with secrets
-on: [workflow_dispatch]
+# on: [workflow_dispatch]
+on: [push]
 
 env:
   az_certificate_pem: ${{ secrets.az_certificate_pem }}
@@ -17,7 +18,7 @@ jobs:
       - name: Check CLI Version
         run: az --version
       - name: testing quotes
-        run: echo terraform ${{ env.testing }}
+        run: echo terraform '${{ env.testing }}'
       # - name: Create the PEM
       #   run: echo "${{ secrets.az_certificate_pem }}" > env.pem
       # - name: Valdiate CLI Access
