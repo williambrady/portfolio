@@ -58,7 +58,7 @@ resource "aws_s3_object" "og_dataset" {
 
 # Configure bucket lifecycle to move objects to IA after 30 days and delete after 90 days.
 resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
-  bucket = aws_s3_bucket.logging.id
+  bucket = aws_s3_bucket.dataset.id
   rule {
     id = "log_expiration"
     filter {}
@@ -75,6 +75,35 @@ resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
 
 # Configure bucket notifications to emit to EventBridge.
 resource "aws_s3_bucket_notification" "dataset" {
-  bucket      = aws_s3_bucket.logging.id
+  bucket      = aws_s3_bucket.dataset.id
   eventbridge = true
+}
+
+# Setup bucket policy to enforce SSL
+resource "aws_s3_bucket_policy" "dataset" {
+  bucket = aws_s3_bucket.dataset.id
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+        "Sid": "AllowSSLRequestsOnly",
+        "Action": "s3:*",
+        "Effect": "Deny",
+        "Resource": [
+            "${aws_s3_bucket.dataset.arn}",
+            "${aws_s3_bucket.dataset.arn}/*"
+        ],
+        "Condition": {
+            "Bool": {
+                  "aws:SecureTransport": "false"
+            }
+        },
+        "Principal": "*"
+    }
+  ]
+}
+POLICY
+
 }

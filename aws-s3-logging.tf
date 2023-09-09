@@ -25,6 +25,21 @@ resource "aws_s3_bucket_policy" "logging" {
   "Version": "2012-10-17",
   "Statement": [
     {
+        "Sid": "AllowSSLRequestsOnly",
+        "Action": "s3:*",
+        "Effect": "Deny",
+        "Resource": [
+            "${aws_s3_bucket.logging.arn}",
+            "${aws_s3_bucket.logging.arn}/*"
+        ],
+        "Condition": {
+            "Bool": {
+                  "aws:SecureTransport": "false"
+            }
+        },
+        "Principal": "*"
+    },
+    {
       "Sid": "Config ACL Check",
       "Effect": "Allow",
       "Principal": {
