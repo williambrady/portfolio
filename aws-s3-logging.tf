@@ -25,6 +25,21 @@ resource "aws_s3_bucket_policy" "logging" {
   "Version": "2012-10-17",
   "Statement": [
     {
+        "Sid": "AllowSSLRequestsOnly",
+        "Action": "s3:*",
+        "Effect": "Deny",
+        "Resource": [
+            "${aws_s3_bucket.logging.arn}",
+            "${aws_s3_bucket.logging.arn}/*"
+        ],
+        "Condition": {
+            "Bool": {
+                  "aws:SecureTransport": "false"
+            }
+        },
+        "Principal": "*"
+    },
+    {
       "Sid": "Config ACL Check",
       "Effect": "Allow",
       "Principal": {
@@ -102,7 +117,7 @@ resource "aws_s3_bucket_public_access_block" "logging" {
 resource "aws_s3_bucket_lifecycle_configuration" "logging" {
   bucket = aws_s3_bucket.logging.id
   rule {
-    id = "log_expiration"
+    id      = "log_expiration"
     filter {}
     status = "Enabled"
     transition {
@@ -117,6 +132,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "logging" {
 
 # Configure bucket notifications to emit to EventBridge.
 resource "aws_s3_bucket_notification" "logging" {
-  bucket      = aws_s3_bucket.logging.id
+  bucket = aws_s3_bucket.logging.id
   eventbridge = true
 }
