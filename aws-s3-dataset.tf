@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "dataset" {
   depends_on    = [aws_s3_bucket.logging]
-  bucket_prefix        = "${var.project_prefix}-${var.aws_account_id}-dataset"
+  bucket_prefix = "${var.project_prefix}-${var.aws_account_id}-dataset"
   force_destroy = true
   provisioner "local-exec" {
     command = "python3 build.py ${var.infile}"
@@ -60,7 +60,7 @@ resource "aws_s3_object" "og_dataset" {
 resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
   bucket = aws_s3_bucket.logging.id
   rule {
-    id      = "log_expiration"
+    id = "log_expiration"
     filter {}
     status = "Enabled"
     transition {
@@ -75,6 +75,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
 
 # Configure bucket notifications to emit to EventBridge.
 resource "aws_s3_bucket_notification" "logging" {
-  bucket = aws_s3_bucket.logging.id
+  bucket      = aws_s3_bucket.logging.id
   eventbridge = true
 }
