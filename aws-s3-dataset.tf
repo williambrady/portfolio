@@ -74,7 +74,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
 }
 
 # Configure bucket notifications to emit to EventBridge.
-resource "aws_s3_bucket_notification" "logging" {
+resource "aws_s3_bucket_notification" "dataset" {
   bucket      = aws_s3_bucket.logging.id
   eventbridge = true
 }
