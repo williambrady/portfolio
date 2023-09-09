@@ -1,11 +1,7 @@
 resource "aws_s3_bucket" "dataset" {
   depends_on    = [aws_s3_bucket.logging]
-  bucket        = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+  bucket_prefix = "${var.project_prefix}-${var.aws_account_id}-dataset"
   force_destroy = true
-  # logging {
-  #   target_bucket = aws_s3_bucket.logging.id
-  #   target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
-  # }
   provisioner "local-exec" {
     command = "python3 build.py ${var.infile}"
   }
@@ -15,7 +11,7 @@ resource "aws_s3_bucket" "dataset" {
 resource "aws_s3_bucket_logging" "dataset" {
   bucket        = aws_s3_bucket.dataset.id
   target_bucket = aws_s3_bucket.logging.id
-  target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+  target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-dataset"
 }
 
 resource "aws_s3_bucket_versioning" "dataset" {
@@ -60,10 +56,11 @@ resource "aws_s3_object" "og_dataset" {
   tags       = var.tags
 }
 
+# Configure bucket lifecycle to move objects to IA after 30 days and delete after 90 days.
 resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
   bucket = aws_s3_bucket.logging.id
   rule {
-    id      = "log_expiration"
+    id = "log_expiration"
     filter {}
     status = "Enabled"
     transition {
@@ -74,4 +71,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
       days = 90
     }
   }
+}
+
+# Configure bucket notifications to emit to EventBridge.
+resource "aws_s3_bucket_notification" "dataset" {
+  bucket      = aws_s3_bucket.logging.id
+  eventbridge = true
 }
