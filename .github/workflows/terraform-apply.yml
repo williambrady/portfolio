@@ -1,10 +1,8 @@
 name: terraform-apply
 run-name: ${{ github.actor }} is applying terraform
 on:
-  push:
-    branches:
-      - master
   pull_request:
+    branches: [master]
     types: [closed]
 
 env:
