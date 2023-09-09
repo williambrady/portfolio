@@ -1,6 +1,11 @@
 name: terraform-apply
 run-name: ${{ github.actor }} is applying terraform
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [closed]
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
