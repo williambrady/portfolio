@@ -57,7 +57,6 @@ resource "aws_iam_policy" "lambda_s3_read" {
   ]
 }
 EOF
-
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_s3_read" {

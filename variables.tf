@@ -28,5 +28,6 @@ variable "tags" {
 
 variable "infile" {
   description = "original CSV file to build from"
+  default = "dataset.csv"
 }
 

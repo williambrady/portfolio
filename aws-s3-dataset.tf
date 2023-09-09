@@ -2,14 +2,20 @@ resource "aws_s3_bucket" "dataset" {
   depends_on = [aws_s3_bucket.logging]
   bucket     = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
   force_destroy = true
-  logging {
-    target_bucket = aws_s3_bucket.logging.id
-    target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
-  }
+  # logging {
+  #   target_bucket = aws_s3_bucket.logging.id
+  #   target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
+  # }
   provisioner "local-exec" {
     command = "python3 build.py ${var.infile}"
   }
   tags = var.tags
+}
+
+resource "aws_s3_bucket_logging" "dataset" {
+  bucket = aws_s3_bucket.dataset.id
+  target_bucket = aws_s3_bucket.logging.id
+  target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-dataset"
 }
 
 resource "aws_s3_bucket_versioning" "dataset" {

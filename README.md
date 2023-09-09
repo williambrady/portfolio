@@ -122,3 +122,37 @@ If I were to continue evolving this project, I have a few things I would improve
 - Consider and deploy authentication options. I have worked heavily with SSO / SAML integration, but have limited experience with implementing API authentication options.
 
 I would also like to see other submissions to solve this problem. Seeing how other people approached the problem could be helpful and adopting any coding nuances that I like from their solutions could be beneficial. The more I see, the better I can be.
+
+# Technical Development Notes
+
+## Example of importing existing resources:
+
+There are many reasons you may have to import an existing resource to your current state, but here's an example.
+
+If `terraform apply` returns something  like the following:
+
+```
+╷
+│ Error: creating IAM Role (portfolio-lambda_s3_read-role): EntityAlreadyExists: Role with name portfolio-lambda_s3_read-role already exists.
+│       status code: 409, request id: 90b68894-c0f4-42bc-bbd0-f6e7326bb326
+│
+│   with aws_iam_role.lambda_s3_read,
+│   on aws-lambda-s3select.tf line 4, in resource "aws_iam_role" "lambda_s3_read":
+│    4: resource "aws_iam_role" "lambda_s3_read" {
+│
+╵
+╷
+│ Error: creating IAM Policy (portfolio-lambda_s3_read-policy): EntityAlreadyExists: A policy called portfolio-lambda_s3_read-policy already exists. Duplicate names are not allowed.
+│       status code: 409, request id: f6442598-5b9f-40a9-b37d-d205753f5f0e
+│
+│   with aws_iam_policy.lambda_s3_read,
+│   on aws-lambda-s3select.tf line 26, in resource "aws_iam_policy" "lambda_s3_read":
+│   26: resource "aws_iam_policy" "lambda_s3_read" {
+```
+
+You can import the existing resources like so:
+
+```
+terraform import aws_iam_role.lambda_s3_read portfolio-lambda_s3_read-role
+terraform import aws_iam_policy.lambda_s3_read arn:aws:iam::918573727633:policy/portfolio-lambda_s3_read-policy
+```

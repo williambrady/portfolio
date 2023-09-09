@@ -25,11 +25,11 @@ resource "aws_s3_bucket_versioning" "logging" {
 }
 
 # Set bucket as logging destination
-resource "aws_s3_bucket_acl" "logging" {
-  bucket = aws_s3_bucket.logging.id
+# resource "aws_s3_bucket_acl" "logging" {
+#   bucket = aws_s3_bucket.logging.id
 
-  acl = "log-delivery-write"
-}
+#   acl = "log-delivery-write"
+# }
 
 # Set the bucket policy to allow AWS log writing.
 resource "aws_s3_bucket_policy" "logging" {

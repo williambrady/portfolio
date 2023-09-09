@@ -1,6 +1,6 @@
 name: terraform-plan
 run-name: ${{ github.actor }} is planning terraform
-on: [push]
+on: [push, pull_request]
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -9,11 +9,19 @@ env:
   TF_VAR_infile: 'dataset.csv'
 
 jobs:
-  terraform-validate:
+  terraform-plan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: terraform --version
-      - run: terraform init
-      - run: terraform fmt
-      - run: terraform plan
+      - name: Terraform Path
+        run: which terraform
+      - name: Terraform --version
+        run: terraform --version
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Format
+        run: terraform fmt
+      - name: Terraform Validate
+        run: terraform validate
+      - name: Terraform Plan
+        run: terraform plan
