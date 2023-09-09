@@ -85,3 +85,19 @@ resource "aws_api_gateway_deployment" "portfolio" {
   stage_name  = "cars"
 }
 
+resource "aws_wafv2_web_acl" "portfolio" {
+  name        = "portfolio"
+  description = "portfolio"
+  scope       = "REGIONAL"
+  default_action {
+    allow {}
+  }
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "portfolio"
+    sampled_requests_enabled   = true
+  }
+  depends_on = [
+    aws_api_gateway_deployment.portfolio,
+  ]
+}

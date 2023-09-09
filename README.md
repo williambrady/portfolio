@@ -156,3 +156,5 @@ You can import the existing resources like so:
 terraform import aws_iam_role.lambda_s3_read portfolio-lambda_s3_read-role
 terraform import aws_iam_policy.lambda_s3_read arn:aws:iam::918573727633:policy/portfolio-lambda_s3_read-policy
 ```
+
+terraform import aws_iam_instance_profile.lambda_s3_read portfolio-lambda_s3_read-profile
