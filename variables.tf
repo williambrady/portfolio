@@ -20,7 +20,7 @@ variable "tags" {
     "owner"       = "william.brady"
     "lob"         = "cloudops"
     "contact"     = "will@crofton.cloud"
-    "projectid"   = "portfolio-0001"
+    "projectid"   = "https://github.com/williambrady/portfolio"
     "component"   = "infrastructure"
     "disposition" = "development"
   }
