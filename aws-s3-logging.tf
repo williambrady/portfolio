@@ -1,6 +1,6 @@
 # Create an S3 bucket to collect our audit logs. If the account already has Global auditing enabled, this section can be disabled.
 resource "aws_s3_bucket" "logging" {
-  bucket = "${var.project_prefix}-${var.aws_account_id}-${var.aws_region}-logging"
+  bucket_prefix = "${var.project_prefix}-${var.aws_account_id}-logging"
 
   # Typically force_destroy is not set, but since this project is a test and will be created/destroyed repeatedly it is allowable.
   force_destroy = true
@@ -98,6 +98,7 @@ resource "aws_s3_bucket_public_access_block" "logging" {
   depends_on              = [aws_s3_bucket_policy.logging]
 }
 
+# Configure the bucket lifecycle to degrade storage tier after 30 days and delete after 90 days.
 resource "aws_s3_bucket_lifecycle_configuration" "logging" {
   bucket = aws_s3_bucket.logging.id
   rule {
@@ -112,4 +113,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "logging" {
       days = 90
     }
   }
+}
+
+# Configure bucket notifications to emit to EventBridge.
+resource "aws_s3_bucket_notification" "logging" {
+  bucket = aws_s3_bucket.logging.id
+  eventbridge = true
 }
