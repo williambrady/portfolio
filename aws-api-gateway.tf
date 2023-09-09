@@ -8,6 +8,14 @@ resource "aws_api_gateway_rest_api" "portfolio" {
   depends_on = [aws_lambda_function.portfolio]
 }
 
+resource "aws_api_gateway_stage" "portfolio" {
+  depends_on           = [aws_api_gateway_deployment.portfolio]
+  deployment_id        = aws_api_gateway_deployment.portfolio.id
+  rest_api_id          = aws_api_gateway_rest_api.portfolio.id
+  stage_name           = "cars"
+  xray_tracing_enabled = true
+}
+
 resource "aws_api_gateway_resource" "proxy" {
   rest_api_id = aws_api_gateway_rest_api.portfolio.id
   parent_id   = aws_api_gateway_rest_api.portfolio.root_resource_id
@@ -19,6 +27,17 @@ resource "aws_api_gateway_method" "proxy" {
   resource_id   = aws_api_gateway_resource.proxy.id
   http_method   = "ANY"
   authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_settings" "proxy" {
+  rest_api_id = aws_api_gateway_rest_api.portfolio.id
+  stage_name  = aws_api_gateway_deployment.portfolio.stage_name
+  method_path = "*/*"
+  settings {
+    logging_level      = "INFO"
+    metrics_enabled    = true
+    data_trace_enabled = true
+  }
 }
 
 resource "aws_api_gateway_integration" "lambda" {
@@ -35,6 +54,17 @@ resource "aws_api_gateway_method" "proxy_root" {
   resource_id   = aws_api_gateway_rest_api.portfolio.root_resource_id
   http_method   = "ANY"
   authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_settings" "proxy_root" {
+  rest_api_id = aws_api_gateway_rest_api.portfolio.id
+  stage_name  = aws_api_gateway_deployment.portfolio.stage_name
+  method_path = "*/*"
+  settings {
+    logging_level      = "INFO"
+    metrics_enabled    = true
+    data_trace_enabled = true
+  }
 }
 
 resource "aws_api_gateway_integration" "lambda_root" {
