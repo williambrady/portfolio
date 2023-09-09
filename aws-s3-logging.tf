@@ -16,6 +16,39 @@ resource "aws_s3_bucket_versioning" "logging" {
   }
 }
 
+# Block Public Access to the bucket as it should never be needed.
+resource "aws_s3_bucket_public_access_block" "logging" {
+  bucket                  = aws_s3_bucket.logging.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  depends_on              = [aws_s3_bucket_policy.logging]
+}
+
+# Configure the bucket lifecycle to degrade storage tier after 30 days and delete after 90 days.
+resource "aws_s3_bucket_lifecycle_configuration" "logging" {
+  bucket = aws_s3_bucket.logging.id
+  rule {
+    id = "log_expiration"
+    filter {}
+    status = "Enabled"
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+    expiration {
+      days = 90
+    }
+  }
+}
+
+# Configure bucket notifications to emit to EventBridge.
+resource "aws_s3_bucket_notification" "logging" {
+  bucket      = aws_s3_bucket.logging.id
+  eventbridge = true
+}
+
 # Set the bucket policy to allow AWS log writing.
 resource "aws_s3_bucket_policy" "logging" {
   bucket = aws_s3_bucket.logging.id
@@ -101,37 +134,4 @@ resource "aws_s3_bucket_policy" "logging" {
 }
 POLICY
 
-}
-
-# Block Public Access to the bucket as it should never be needed.
-resource "aws_s3_bucket_public_access_block" "logging" {
-  bucket                  = aws_s3_bucket.logging.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-  depends_on              = [aws_s3_bucket_policy.logging]
-}
-
-# Configure the bucket lifecycle to degrade storage tier after 30 days and delete after 90 days.
-resource "aws_s3_bucket_lifecycle_configuration" "logging" {
-  bucket = aws_s3_bucket.logging.id
-  rule {
-    id = "log_expiration"
-    filter {}
-    status = "Enabled"
-    transition {
-      days          = 30
-      storage_class = "STANDARD_IA"
-    }
-    expiration {
-      days = 90
-    }
-  }
-}
-
-# Configure bucket notifications to emit to EventBridge.
-resource "aws_s3_bucket_notification" "logging" {
-  bucket      = aws_s3_bucket.logging.id
-  eventbridge = true
 }
