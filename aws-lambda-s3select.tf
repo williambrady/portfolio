@@ -4,6 +4,7 @@
 resource "aws_iam_role" "lambda_s3_read" {
   name               = "${var.project_prefix}-lambda_s3_read-role"
   path               = "/service-role/"
+  tags = var.tags
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -25,6 +26,7 @@ EOF
 # Create a Read-Only S3 policy to allow the lambda instance to read the S3 Bucket
 resource "aws_iam_policy" "lambda_s3_read" {
   name   = "${var.project_prefix}-lambda_s3_read-policy"
+  tags = var.tags
   policy = <<EOF
 {
   "Version": "2012-10-17",
