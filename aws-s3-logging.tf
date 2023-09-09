@@ -117,7 +117,7 @@ resource "aws_s3_bucket_public_access_block" "logging" {
 resource "aws_s3_bucket_lifecycle_configuration" "logging" {
   bucket = aws_s3_bucket.logging.id
   rule {
-    id      = "log_expiration"
+    id = "log_expiration"
     filter {}
     status = "Enabled"
     transition {
@@ -132,6 +132,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "logging" {
 
 # Configure bucket notifications to emit to EventBridge.
 resource "aws_s3_bucket_notification" "logging" {
-  bucket = aws_s3_bucket.logging.id
+  bucket      = aws_s3_bucket.logging.id
   eventbridge = true
 }
