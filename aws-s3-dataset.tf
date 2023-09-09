@@ -59,3 +59,19 @@ resource "aws_s3_object" "og_dataset" {
   source     = "./${var.infile}"
   tags       = var.tags
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
+  bucket = aws_s3_bucket.logging.id
+  rule {
+    id      = "log_expiration"
+    filter {}
+    status = "Enabled"
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+    expiration {
+      days = 90
+    }
+  }
+}
