@@ -31,3 +31,7 @@ variable "infile" {
   default     = "dataset.csv"
 }
 
+variable "sns_topic_arn" {
+  description = "SNS Topic ARN"
+  default     = "arn:aws:sns:us-east-1:918573727633:cis-notifications"
+}
