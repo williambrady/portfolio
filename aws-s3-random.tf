@@ -55,7 +55,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "george" {
 
 # Configure bucket notifications to SNS and emit to EventBridge.
 resource "aws_s3_bucket_notification" "george" {
-  bucket = aws_s3_bucket.george.id
+  bucket      = aws_s3_bucket.george.id
   eventbridge = true
   topic {
     topic_arn = var.sns_topic_arn
