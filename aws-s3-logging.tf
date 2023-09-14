@@ -43,10 +43,14 @@ resource "aws_s3_bucket_lifecycle_configuration" "logging" {
   }
 }
 
-# Configure bucket notifications to emit to EventBridge.
+# Configure bucket notifications to SNS and emit to EventBridge.
 resource "aws_s3_bucket_notification" "logging" {
   bucket      = aws_s3_bucket.logging.id
   eventbridge = true
+  topic {
+    topic_arn = var.sns_topic_arn
+    events    = ["s3:ObjectCreated:*"]
+  }
 }
 
 # Set the bucket policy to allow AWS log writing.

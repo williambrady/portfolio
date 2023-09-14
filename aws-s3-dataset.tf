@@ -73,10 +73,14 @@ resource "aws_s3_bucket_lifecycle_configuration" "dataset" {
   }
 }
 
-# Configure bucket notifications to emit to EventBridge.
+# Configure bucket notifications to SNS and emit to EventBridge.
 resource "aws_s3_bucket_notification" "dataset" {
   bucket      = aws_s3_bucket.dataset.id
   eventbridge = true
+  topic {
+    topic_arn = var.sns_topic_arn
+    events    = ["s3:ObjectCreated:*"]
+  }
 }
 
 # Setup bucket policy to enforce SSL
