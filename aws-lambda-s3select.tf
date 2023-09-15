@@ -1,4 +1,4 @@
-# IAM Role
+# Lambda function access
 
 # Create an Instance Role to allow the Lambda instance to AssumeRole.
 resource "aws_iam_role" "lambda_s3_read" {
@@ -20,7 +20,6 @@ resource "aws_iam_role" "lambda_s3_read" {
   ]
 }
 EOF
-
 }
 
 # Create a Read-Only S3 policy to allow the lambda instance to read the S3 Bucket
@@ -61,13 +60,7 @@ resource "aws_iam_policy" "lambda_s3_read" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_s3_read" {
-  role       = aws_iam_role.lambda_s3_read.name
-  policy_arn = aws_iam_policy.lambda_s3_read.arn
-  depends_on = [aws_iam_policy.lambda_s3_read]
-}
-
-#Attach the Policy to the Instance Role
+# Create the instance profile for Lambda
 resource "aws_iam_instance_profile" "lambda_s3_read" {
   name = "${var.project_prefix}-lambda_s3_read-profile"
   role = aws_iam_role.lambda_s3_read.name
@@ -75,6 +68,13 @@ resource "aws_iam_instance_profile" "lambda_s3_read" {
     aws_iam_role.lambda_s3_read,
     aws_iam_policy.lambda_s3_read,
   ]
+}
+
+# Attach the Policy to the Instance Role
+resource "aws_iam_role_policy_attachment" "lambda_s3_read" {
+  role       = aws_iam_role.lambda_s3_read.name
+  policy_arn = aws_iam_policy.lambda_s3_read.arn
+  depends_on = [aws_iam_policy.lambda_s3_read]
 }
 
 # Lambda Content
@@ -109,3 +109,57 @@ resource "aws_lambda_permission" "apigw" {
   source_arn = "${aws_api_gateway_rest_api.portfolio.execution_arn}/*/*"
 }
 
+# Create SSM Stored Parameter for target S3 bucket name.
+resource "aws_ssm_parameter" "s3_bucket_name" {
+  name  = "/portfolio/s3_bucket_name"
+  type  = "String"
+  value = aws_s3_bucket.dataset.id
+  tags  = var.tags
+}
+
+# Create a role to allow the Lambda funciton to request the SSM Stored Parameter for target S3 bucket name.
+resource "aws_iam_role" "lambda_ssm_read" {
+  name               = "${var.project_prefix}-lambda_ssm_read-role"
+  path               = "/service-role/"
+  tags               = var.tags
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+    "Action": "sts:AssumeRole",
+    "Principal": {
+      "Service": "lambda.amazonaws.com"
+    },
+    "Effect": "Allow",
+    "Sid" : ""
+    }
+  ]
+}
+EOF
+}
+
+# Create role policy to allow lambda to access the Stored PArameter.
+resource "aws_iam_policy" "lambda_ssm_read" {
+  name   = "${var.project_prefix}-lambda_ssm_read-policy"
+  tags   = var.tags
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+        "Effect": "Allow",
+        "Action": "ssm:GetParameter",
+        "Resource": "arn:aws:ssm:us-east-1:918573727633:parameter/portfolio/s3_bucket_name"
+    }
+  ]
+}
+EOF
+}
+
+# Attach the Policy to the Instance Role
+resource "aws_iam_role_policy_attachment" "lambda_ssm_read" {
+  role       = aws_iam_role.lambda_ssm_read.name
+  policy_arn = aws_iam_policy.lambda_ssm_read.arn
+  depends_on = [aws_iam_policy.lambda_ssm_read]
+}
