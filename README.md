@@ -156,3 +156,7 @@ You can import the existing resources like so:
 terraform import aws_iam_role.lambda_s3_read portfolio-lambda_s3_read-role
 terraform import aws_iam_policy.lambda_s3_read arn:aws:iam::918573727633:policy/portfolio-lambda_s3_read-policy
 ```
+
+## How do you replace a bad randomly generated value?
+
+Every now and then the random_pet resource will generate a string that combines with other string requirements and exceeds naming restrictions. You can correct this by either destroying and trying again, or simply tell terraform to generate another random_pet: `terraform apply -replace="random_pet.george"`

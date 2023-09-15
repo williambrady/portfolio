@@ -11,7 +11,7 @@ output "aws_cloudtrail_portfolio" {
 }
 
 output "aws_iam_lambda_role" {
-  value = aws_iam_role.lambda_s3_read.arn
+  value = aws_iam_role.lambda_access.arn
 }
 
 output "aws_api_endpoint" {
