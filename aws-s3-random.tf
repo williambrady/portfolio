@@ -1,15 +1,12 @@
+# Validate how to use the terraform random resources.
 resource "random_pet" "george" {
-  length    = 2
+  length    = 1
   separator = "-"
-  #   keepers = {
-  #     pet = "lela"
-  #   }
 }
 
 resource "aws_s3_bucket" "george" {
   depends_on    = [aws_s3_bucket.logging]
   bucket_prefix = "${var.project_prefix}-${var.aws_account_id}-${random_pet.george.id}"
-  #   bucket_prefix = "${var.project_prefix}-${var.aws_account_id}-${random_pet.george.keepers.id}"
   force_destroy = true
   tags          = var.tags
 }

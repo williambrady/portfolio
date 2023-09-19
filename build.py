@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 Open the initial CSV file and add row numbers to emulate an index.
 This will allow AWS S3 Select to query the file directly instead of requiring a database.
@@ -7,8 +7,14 @@ This loader will also package the lambda function for inclusion in the S3 upload
 import sys
 import subprocess
 
-sourcefile = "{}".format(sys.argv[1])
-#sourcefile = 'dataset.csv'
+# If the source file is provided, use it. Otherwise, use the default.
+if len(sys.argv) == 2 :
+    print ("Source provided: {}".format(sys.argv[1]))
+    sourcefile = "{}".format(sys.argv[1])
+else:
+    print("No source provided. Using default.")
+    sourcefile = 'dataset.csv'
+
 destfile = 'indexed_dataset.csv'
 log = open(destfile,"w")
 
