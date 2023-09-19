@@ -2,10 +2,6 @@ variable "aws_account_id" {
   description = "AWS Account Number"
 }
 
-# variable "aws_profile" {
-#   description = "Profile name in ~/.aws/credentials used to access target account"
-# }
-
 variable "aws_region" {
   description = "default region to build in"
 }

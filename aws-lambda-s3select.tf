@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "lambda_read" {
       "logs:PutLogEvents",
     ]
     resources = [
-      "arn:aws:logs:us-east-1:918573727633:log-group:/aws/lambda/portfolio-cars:*",
+      "arn:aws:logs:us-east-1:918573727633:log-group:/aws/lambda/${var.project_prefix}:*",
     ]
   }
   statement {
@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "lambda_read" {
       "s3:ListBucket",
     ]
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.dataset.arn}",
+      "${aws_s3_bucket.dataset.arn}",
     ]
   }
   statement {
@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "lambda_read" {
       "s3:GetObject",
     ]
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.dataset.arn}/*",
+      "${aws_s3_bucket.dataset.arn}/*",
     ]
   }
   statement {
@@ -91,15 +91,14 @@ resource "aws_iam_role_policy_attachment" "lambda_read" {
 
 # Lambda Content
 resource "aws_lambda_function" "portfolio" {
-  # filename = "aws-lambda-portfolio-payload.zip"
   s3_bucket        = aws_s3_bucket.dataset.id
   s3_key           = "lambda_function.zip"
-  function_name    = "portfolio-cars"
+  function_name    = var.project_prefix
   memory_size      = 192
   role             = aws_iam_role.lambda_access.arn
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.8"
-  source_code_hash = base64sha256("aws-lambda-portfolio-payload.zip")
+  source_code_hash = base64sha256("aws-lambda-${var.project_prefix}-payload.zip")
   tags             = var.tags
   depends_on = [
     aws_iam_instance_profile.lambda_instance_profile,
@@ -123,7 +122,7 @@ resource "aws_lambda_permission" "apigw" {
 
 # Create SSM Stored Parameter for target S3 bucket name.
 resource "aws_ssm_parameter" "s3_bucket_name" {
-  name  = "/portfolio/s3_bucket_name"
+  name  = "/${var.project_prefix}/s3_bucket_name"
   type  = "String"
   value = aws_s3_bucket.dataset.id
   tags  = var.tags
@@ -131,7 +130,7 @@ resource "aws_ssm_parameter" "s3_bucket_name" {
 
 # Log the lambda execution to Cloudwatch
 resource "aws_cloudwatch_log_group" "portfolio" {
-  name              = "/aws/lambda/portfolio-cars"
+  name              = "/aws/lambda/${var.project_prefix}"
   retention_in_days = 30
   tags              = var.tags
 }
