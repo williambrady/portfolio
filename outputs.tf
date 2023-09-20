@@ -6,6 +6,10 @@ output "aws_s3_bucket_dataset" {
   value = aws_s3_bucket.dataset.id
 }
 
+output "aws_s3_bucket_random" {
+  value = aws_s3_bucket.george.id
+}
+
 output "aws_cloudtrail_portfolio" {
   value = aws_cloudtrail.portfolio.id
 }
