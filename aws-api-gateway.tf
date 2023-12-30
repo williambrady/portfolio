@@ -1,6 +1,7 @@
+# Create an API Gateway that calls Lambda to serice requests.
 resource "aws_api_gateway_rest_api" "portfolio" {
-  name        = "Portfolio API"
-  description = "Portfolio API for Car data"
+  name        = "${var.project_prefix} API"
+  description = "${var.project_prefix} API Gateway"
   endpoint_configuration {
     types = ["REGIONAL"]
   }
@@ -52,6 +53,6 @@ resource "aws_api_gateway_deployment" "portfolio" {
     aws_api_gateway_integration.lambda_root,
   ]
   rest_api_id = aws_api_gateway_rest_api.portfolio.id
-  stage_name  = "cars"
+  stage_name  = "alpha"
 }
 

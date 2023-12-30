@@ -131,6 +131,6 @@ resource "aws_ssm_parameter" "s3_bucket_name" {
 # Log the lambda execution to Cloudwatch
 resource "aws_cloudwatch_log_group" "portfolio" {
   name              = "/aws/lambda/${var.project_prefix}"
-  retention_in_days = 30
+  retention_in_days = var.default_log_retention_days
   tags              = var.tags
 }

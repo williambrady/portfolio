@@ -53,6 +53,13 @@ resource "aws_s3_bucket_notification" "logging" {
   }
 }
 
+resource "aws_s3_bucket_logging" "logging" {
+  bucket        = aws_s3_bucket.logging.id
+  target_bucket = aws_s3_bucket.logging.id
+  target_prefix = "s3-logs/${var.project_prefix}-${var.aws_account_id}-${aws_s3_bucket.logging.id}"
+}
+
+
 # Set the bucket policy to allow AWS log writing.
 resource "aws_s3_bucket_policy" "logging" {
   bucket = aws_s3_bucket.logging.id
