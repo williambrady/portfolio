@@ -111,3 +111,12 @@ resource "aws_s3_bucket_policy" "dataset" {
 POLICY
 
 }
+
+# Enumerate and Load Sample Data
+resource "aws_s3_object" "sample_data" {
+  for_each = fileset("./sample_data", "*")
+  bucket   = aws_s3_bucket.dataset.id
+  key      = each.value
+  source   = "./sample_data/${each.value}"
+  tags     = var.tags
+}
